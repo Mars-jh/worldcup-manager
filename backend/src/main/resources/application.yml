@@ -1,0 +1,9 @@
+server:
+  port: 8080
+app:
+  jwt:
+    secret: WorldCup2066SecretKeyForJWTTokenGenerationMustBe256BitsLong!!
+    expiration: 86400000
+spring:
+  main:
+    banner-mode: off
