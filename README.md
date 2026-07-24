@@ -1,6 +1,21 @@
-﻿# 2066 世界杯管理系统 (World Cup Manager)
+﻿# 🏆 2066 世界杯管理系统 (World Cup Manager)
 
-基于 Spring Boot 3 + Vue 3 + Pinia + Element Plus 的全栈世界杯赛事管理系统。
+<p align="center">
+  <img src="https://img.shields.io/badge/Java-17-orange?logo=openjdk" alt="Java 17">
+  <img src="https://img.shields.io/badge/Spring%20Boot-3.2.5-brightgreen?logo=springboot" alt="Spring Boot">
+  <img src="https://img.shields.io/badge/Vue-3.4-42b883?logo=vuedotjs" alt="Vue 3">
+  <img src="https://img.shields.io/badge/Vite-5.0-646cff?logo=vite" alt="Vite 5">
+  <img src="https://img.shields.io/badge/License-MIT-blue" alt="License">
+  <img src="https://img.shields.io/badge/PRs-welcome-brightgreen" alt="PRs Welcome">
+</p>
+
+<p align="center">
+  <b>⚽ 足球赛事管理 · 小组赛积分 · 淘汰赛对阵 · 球员数据 · 权限管控</b>
+</p>
+
+基于 Spring Boot 3 + Vue 3 + Pinia + Element Plus 的全栈世界杯赛事管理系统。适合学习全栈开发、毕设参考、赛事管理实战演练。
+
+> **English:** A full-stack World Cup tournament management system built with Spring Boot 3 & Vue 3. Features team/player management, group stage standings, knockout bracket generation, match scoring, JWT auth, and dashboard analytics. Perfect for learning full-stack development or as a graduation project reference.
 
 ## 🎯 项目功能
 
@@ -240,3 +255,9 @@ MIT - 仅供学习参考使用
 ---
 
 **2066 世界杯管理系统** - 让赛事管理更高效！⚽🏆
+
+---
+
+## 🔑 关键词 / Keywords
+
+`世界杯` `World Cup` `赛事管理` `Tournament Management` `Spring Boot` `Vue 3` `全栈` `Full Stack` `足球` `Football` `Soccer` `小组赛` `Group Stage` `淘汰赛` `Knockout` `积分榜` `Standings` `对阵图` `Bracket` `球队管理` `球员管理` `JWT` `Element Plus` `ECharts` `毕设` `毕业设计` `课程设计`
