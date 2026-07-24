@@ -45,6 +45,8 @@
 
 ```bash
 cd backend
+# PowerShell；生产环境请使用独立生成的高强度密钥
+$env:JWT_SECRET="replace-with-a-random-secret-at-least-32-characters"
 mvn clean spring-boot:run
 ```
 

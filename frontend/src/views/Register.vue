@@ -74,13 +74,14 @@ const rules = {
 }
 
 async function handleRegister() {
-  await formRef.value.validate()
+  const valid = await formRef.value.validate().catch(() => false)
+  if (!valid) return
   loading.value = true
   try {
     await authStore.register(form.username, form.password, form.email)
     ElMessage.success('注册成功')
     router.push('/dashboard')
-  } catch (e) {
+  } catch {
     // 错误已在 axios 拦截器中处理
   } finally {
     loading.value = false

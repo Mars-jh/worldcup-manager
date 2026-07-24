@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
+import { ElMessage } from 'element-plus'
 
 /**
  * 路由配置
@@ -76,7 +77,7 @@ const router = createRouter({
   routes
 })
 
-// 路由守卫 - 未登录跳转登录页
+// 路由守卫 - 未登录跳转登录页，权限不足跳转仪表板
 router.beforeEach((to, from, next) => {
   const authStore = useAuthStore()
 
@@ -84,8 +85,11 @@ router.beforeEach((to, from, next) => {
     next() // 公开页面
   } else if (!authStore.token) {
     next('/login') // 未登录
+  } else if (to.meta.roles && !to.meta.roles.includes(authStore.role)) {
+    ElMessage.warning('权限不足，无法访问该页面')
+    next('/dashboard') // 角色权限不足
   } else {
-    next() // 已登录
+    next() // 已登录且有权限
   }
 })
 

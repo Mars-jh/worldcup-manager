@@ -37,9 +37,13 @@ request.interceptors.response.use(
   },
   error => {
     if (error.response?.status === 401) {
-      // Token 过期或无效，清除登录状态
+      // Token 过期或无效，同步清除所有登录状态
       localStorage.removeItem('token')
       localStorage.removeItem('user')
+      // 动态导入 auth store 以避免循环依赖
+      import('@/stores/auth').then(({ useAuthStore }) => {
+        useAuthStore().logout()
+      })
       router.push('/login')
       ElMessage.error('登录已过期，请重新登录')
     } else if (error.response?.status === 403) {

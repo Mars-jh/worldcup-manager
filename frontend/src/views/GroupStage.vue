@@ -127,9 +127,13 @@ const scoreDialogVisible = ref(false)
 const scoreForm = ref({ matchId: null, homeTeamId: null, awayTeamId: null, homeGoals: 0, awayGoals: 0 })
 
 onMounted(async () => {
-  const teamRes = await request.get('/teams')
-  teams.value = teamRes.data
-  loadGroupData()
+  try {
+    const teamRes = await request.get('/teams')
+    teams.value = teamRes.data
+    loadGroupData()
+  } catch {
+    ElMessage.error('加载球队数据失败')
+  }
 })
 
 async function loadGroupData() {
@@ -142,6 +146,8 @@ async function loadGroupData() {
     ])
     standings.value = standRes.data
     matches.value = matchRes.data
+  } catch {
+    ElMessage.error('加载小组数据失败')
   } finally {
     loadingStandings.value = false
     loadingMatches.value = false
@@ -174,7 +180,9 @@ async function submitScore() {
     ElMessage.success('比分已录入')
     scoreDialogVisible.value = false
     loadGroupData()
-  } catch (e) {}
+  } catch {
+    ElMessage.error('比分录入失败')
+  }
 }
 
 async function generateKnockout() {

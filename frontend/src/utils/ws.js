@@ -11,6 +11,7 @@ let subscriptions = []
 export function connectWs(onScoreUpdate) {
   // 动态导入，避免 SSR 问题
   if (typeof window === 'undefined') return
+  void onScoreUpdate
 
   // 简单实现：使用轮询作为 fallback
   // 如果需要真正的 WebSocket，取消以下注释并安装 @stomp/stompjs

@@ -108,9 +108,13 @@ const form = ref({
 })
 
 onMounted(async () => {
-  const teamRes = await request.get('/teams')
-  teams.value = teamRes.data
-  loadPlayers()
+  try {
+    const teamRes = await request.get('/teams')
+    teams.value = teamRes.data
+    loadPlayers()
+  } catch {
+    ElMessage.error('加载球队数据失败')
+  }
 })
 
 async function loadPlayers() {
@@ -149,13 +153,19 @@ async function savePlayer() {
     }
     dialogVisible.value = false
     loadPlayers()
-  } catch (e) {}
+  } catch {
+    ElMessage.error('保存球员失败')
+  }
 }
 
 async function deletePlayer(id) {
-  await request.delete('/players/' + id)
-  ElMessage.success('删除成功')
-  loadPlayers()
+  try {
+    await request.delete('/players/' + id)
+    ElMessage.success('删除成功')
+    loadPlayers()
+  } catch {
+    ElMessage.error('删除球员失败')
+  }
 }
 </script>
 

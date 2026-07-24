@@ -22,6 +22,9 @@ public class JwtUtil {
 
     public JwtUtil(@Value("${app.jwt.secret}") String secret,
                    @Value("${app.jwt.expiration}") long expiration) {
+        if (secret == null || secret.length() < 32) {
+            throw new IllegalStateException("JWT_SECRET must contain at least 32 characters");
+        }
         this.key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
         this.expiration = expiration;
     }
@@ -45,7 +48,11 @@ public class JwtUtil {
     /** 从 Token 提取角色 */
     public Role getRole(String token) {
         String role = getClaims(token).getPayload().get("role", String.class);
-        return Role.valueOf(role);
+        try {
+            return Role.valueOf(role);
+        } catch (IllegalArgumentException e) {
+            return Role.VIEWER; // 无效角色默认降级为 VIEWER
+        }
     }
 
     /** 验证 Token 是否有效 */

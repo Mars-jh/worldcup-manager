@@ -121,8 +121,12 @@ const hasBracket = computed(() => {
 })
 
 onMounted(async () => {
-  const teamRes = await request.get('/teams')
-  teams.value = teamRes.data
+  try {
+    const teamRes = await request.get('/teams')
+    teams.value = teamRes.data
+  } catch {
+    ElMessage.error('加载球队数据失败')
+  }
   loadBracket()
 })
 
@@ -130,8 +134,8 @@ async function loadBracket() {
   try {
     const res = await request.get('/knockout/bracket')
     bracket.value = res.data
-  } catch (e) {
-    console.error(e)
+  } catch {
+    ElMessage.error('加载淘汰赛对阵失败')
   }
 }
 
@@ -173,7 +177,9 @@ async function submitScore() {
     ElMessage.success('比分已录入，胜者已晋级')
     scoreDialogVisible.value = false
     loadBracket()
-  } catch (e) {}
+  } catch {
+    ElMessage.error('比分录入失败')
+  }
 }
 </script>
 

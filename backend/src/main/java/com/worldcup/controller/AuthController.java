@@ -68,20 +68,30 @@ public class AuthController {
         return ApiResponse.ok("注册成功", data);
     }
 
-    /** 获取当前用户信息 */
+    /** 获取当前用户信息（需要有效的 JWT Token） */
     @GetMapping("/me")
-    public ApiResponse<?> me(@RequestHeader("Authorization") String authHeader) {
+    public ApiResponse<?> me(@RequestHeader(value = "Authorization", required = false) String authHeader) {
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            return ApiResponse.error("未提供有效的认证令牌");
+        }
         String token = authHeader.substring(7);
-        String username = jwtUtil.getUsername(token);
-        return userService.findByUsername(username)
-                .map(user -> {
-                    Map<String, Object> data = new LinkedHashMap<>();
-                    data.put("id", user.getId());
-                    data.put("username", user.getUsername());
-                    data.put("email", user.getEmail());
-                    data.put("role", user.getRole());
-                    return ApiResponse.ok(data);
-                })
-                .orElse(ApiResponse.error("用户不存在"));
+        if (!jwtUtil.validateToken(token)) {
+            return ApiResponse.error("令牌无效或已过期");
+        }
+        try {
+            String username = jwtUtil.getUsername(token);
+            return userService.findByUsername(username)
+                    .map(user -> {
+                        Map<String, Object> data = new LinkedHashMap<>();
+                        data.put("id", user.getId());
+                        data.put("username", user.getUsername());
+                        data.put("email", user.getEmail());
+                        data.put("role", user.getRole());
+                        return ApiResponse.ok(data);
+                    })
+                    .orElse(ApiResponse.error("用户不存在"));
+        } catch (Exception e) {
+            return ApiResponse.error("令牌解析失败");
+        }
     }
 }

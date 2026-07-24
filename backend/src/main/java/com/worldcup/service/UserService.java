@@ -82,7 +82,7 @@ public class UserService {
     public void resetPassword(Long id, String newPassword) {
         User user = users.get(id);
         if (user == null) throw new IllegalArgumentException("用户不存在");
-        if (newPassword.length() < 6) throw new IllegalArgumentException("密码长度不能少于6位");
+        if (newPassword == null || newPassword.length() < 6) throw new IllegalArgumentException("密码长度不能少于6位");
         user.setPassword(passwordEncoder.encode(newPassword));
     }
 

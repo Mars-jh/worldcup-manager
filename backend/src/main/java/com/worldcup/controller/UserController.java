@@ -40,6 +40,9 @@ public class UserController {
     @PutMapping("/{id}/reset-password")
     public ApiResponse<?> resetPassword(@PathVariable Long id, @RequestBody Map<String, String> body) {
         String newPassword = body.get("newPassword");
+        if (newPassword == null || newPassword.length() < 6) {
+            return ApiResponse.error("密码长度不能少于6位");
+        }
         userService.resetPassword(id, newPassword);
         return ApiResponse.ok("密码已重置", null);
     }

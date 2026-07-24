@@ -79,8 +79,8 @@ public class GroupStageService {
             Team away = findTeamById(teams, match.getAwayTeamId());
             if (home == null || away == null) continue;
 
-            int hg = match.getHomeGoals();
-            int ag = match.getAwayGoals();
+            int hg = match.getHomeGoals() != null ? match.getHomeGoals() : 0;
+            int ag = match.getAwayGoals() != null ? match.getAwayGoals() : 0;
 
             // 更新主队统计
             home.setPlayed(home.getPlayed() + 1);

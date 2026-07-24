@@ -120,7 +120,9 @@ async function saveUser() {
     ElMessage.success('更新成功')
     editDialogVisible.value = false
     loadUsers()
-  } catch (e) {}
+  } catch {
+    ElMessage.error('保存用户失败')
+  }
 }
 
 function resetPwd(user) {
@@ -137,13 +139,19 @@ async function submitResetPwd() {
     await request.put('/users/' + pwdForm.value.userId + '/reset-password', { newPassword: pwdForm.value.newPassword })
     ElMessage.success('密码已重置')
     pwdDialogVisible.value = false
-  } catch (e) {}
+  } catch {
+    ElMessage.error('重置密码失败')
+  }
 }
 
 async function deleteUser(id) {
-  await request.delete('/users/' + id)
-  ElMessage.success('删除成功')
-  loadUsers()
+  try {
+    await request.delete('/users/' + id)
+    ElMessage.success('删除成功')
+    loadUsers()
+  } catch {
+    ElMessage.error('删除用户失败')
+  }
 }
 </script>
 

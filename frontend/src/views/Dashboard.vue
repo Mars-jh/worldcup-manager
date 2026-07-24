@@ -48,9 +48,10 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import request from '@/utils/request'
 import * as echarts from 'echarts'
+import { ElMessage } from 'element-plus'
 
 const stats = ref([])
 const topScorers = ref([])
@@ -106,6 +107,7 @@ onMounted(async () => {
     window.addEventListener('resize', handleResize)
   } catch (e) {
     console.error('加载仪表板数据失败', e)
+    ElMessage.error('加载仪表板数据失败，请稍后重试')
   }
 })
 

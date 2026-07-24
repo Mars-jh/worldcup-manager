@@ -1,8 +1,6 @@
 package com.worldcup.config;
 
 import org.springframework.context.annotation.*;
-import org.springframework.web.cors.*;
-import org.springframework.web.cors.reactive.CorsWebFilter;
 import org.springframework.web.servlet.config.annotation.*;
 
 /**
@@ -14,7 +12,7 @@ public class CorsConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("http://localhost:5173", "http://localhost:3000")
+                .allowedOrigins("http://localhost:5173")
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
                 .allowCredentials(true)

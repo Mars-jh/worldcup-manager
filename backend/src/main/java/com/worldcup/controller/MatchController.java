@@ -52,15 +52,17 @@ public class MatchController {
     @PutMapping("/{id}/score")
     @PreAuthorize("hasAnyRole('ADMIN', 'OPERATOR')")
     public ApiResponse<Match> recordScore(@PathVariable Long id, @RequestBody Map<String, Integer> body) {
-        int homeGoals = body.getOrDefault("homeGoals", 0);
-        int awayGoals = body.getOrDefault("awayGoals", 0);
-
-        Match match = matchService.recordScore(id, homeGoals, awayGoals);
-
-        // 如果是淘汰赛，自动晋级胜者
-        if (!"GROUP".equals(match.getStage())) {
-            knockoutService.advanceWinner(id);
+        Integer homeGoals = body.get("homeGoals");
+        Integer awayGoals = body.get("awayGoals");
+        if (homeGoals == null || awayGoals == null) {
+            throw new IllegalArgumentException("主客队比分不能为空");
         }
+
+        Match existing = matchService.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("比赛不存在"));
+        Match match = "GROUP".equals(existing.getStage())
+                ? matchService.recordScore(id, homeGoals, awayGoals)
+                : knockoutService.recordScore(id, homeGoals, awayGoals);
 
         // WebSocket 广播比分更新给所有在线用户
         Map<String, Object> payload = new LinkedHashMap<>();

@@ -68,13 +68,14 @@ const rules = {
 }
 
 async function handleLogin() {
-  await formRef.value.validate()
+  const valid = await formRef.value.validate().catch(() => false)
+  if (!valid) return
   loading.value = true
   try {
     await authStore.login(form.username, form.password)
     ElMessage.success('登录成功')
     router.push('/dashboard')
-  } catch (e) {
+  } catch {
     // 错误已在 axios 拦截器中处理
   } finally {
     loading.value = false

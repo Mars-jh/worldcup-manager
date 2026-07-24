@@ -3,7 +3,7 @@
     <div class="page-header">
       <h2 class="page-title">球队管理</h2>
       <div class="header-actions">
-        <el-input v-model="searchText" placeholder="搜索球队..." prefix-icon="Search" clearable style="width: 200px" @input="handleSearch" />
+        <el-input v-model="searchText" placeholder="搜索球队..." prefix-icon="Search" clearable style="width: 200px" @keyup.enter="handleSearch" @clear="loadTeams" />
         <el-select v-model="filterGroup" placeholder="筛选小组" clearable style="width: 120px" @change="loadTeams">
           <el-option v-for="g in 'ABCDEFGH'.split('')" :key="g" :label="g + ' 组'" :value="g" />
         </el-select>
@@ -107,7 +107,7 @@ async function loadTeams() {
 
 async function handleSearch() {
   if (searchText.value) {
-    const res = await request.get('/teams', { params: { keyword: searchText.value } })
+    const res = await request.get('/teams', { params: { keyword: searchText.value, group: filterGroup.value || undefined } })
     teams.value = res.data
   } else {
     loadTeams()
@@ -136,13 +136,19 @@ async function saveTeam() {
     }
     dialogVisible.value = false
     loadTeams()
-  } catch (e) {}
+  } catch {
+    ElMessage.error('保存球队失败')
+  }
 }
 
 async function deleteTeam(id) {
-  await request.delete('/teams/' + id)
-  ElMessage.success('删除成功')
-  loadTeams()
+  try {
+    await request.delete('/teams/' + id)
+    ElMessage.success('删除成功')
+    loadTeams()
+  } catch {
+    ElMessage.error('删除球队失败')
+  }
 }
 </script>
 

@@ -166,8 +166,11 @@ public class DataInitializer implements CommandLineRunner {
                     case MF -> 68 + random.nextInt(25);
                     case FW -> 70 + random.nextInt(25);
                 };
-                // 明星球员加成（每队1-2个85+的球员）
-                if (i < 2) baseRating = Math.max(baseRating, 82 + random.nextInt(15));
+                // 明星球员加成（随机选2个非门将球员能力值85+）
+                int star1 = random.nextInt(23);
+                int star2;
+                do { star2 = random.nextInt(23); } while (star2 == star1);
+                if (i == star1 || i == star2) baseRating = Math.max(baseRating, 82 + random.nextInt(15));
 
                 Player player = Player.builder()
                         .name(firstName + " " + lastName)

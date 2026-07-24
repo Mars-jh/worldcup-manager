@@ -33,14 +33,19 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         if (header != null && header.startsWith("Bearer ")) {
             String token = header.substring(7);
             if (jwtUtil.validateToken(token)) {
-                String username = jwtUtil.getUsername(token);
-                String role = jwtUtil.getRole(token).name();
-                List<SimpleGrantedAuthority> authorities = List.of(
-                        new SimpleGrantedAuthority("ROLE_" + role)
-                );
-                UsernamePasswordAuthenticationToken auth =
-                        new UsernamePasswordAuthenticationToken(username, null, authorities);
-                SecurityContextHolder.getContext().setAuthentication(auth);
+                try {
+                    String username = jwtUtil.getUsername(token);
+                    String role = jwtUtil.getRole(token).name();
+                    List<SimpleGrantedAuthority> authorities = List.of(
+                            new SimpleGrantedAuthority("ROLE_" + role)
+                    );
+                    UsernamePasswordAuthenticationToken auth =
+                            new UsernamePasswordAuthenticationToken(username, null, authorities);
+                    SecurityContextHolder.getContext().setAuthentication(auth);
+                } catch (Exception e) {
+                    // Token 解析失败，不设置认证上下文
+                    SecurityContextHolder.clearContext();
+                }
             }
         }
         chain.doFilter(request, response);

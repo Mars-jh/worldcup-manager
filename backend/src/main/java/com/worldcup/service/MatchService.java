@@ -31,9 +31,6 @@ public class MatchService {
         if (match == null) throw new IllegalArgumentException("比赛不存在");
         if (updated.getHomeTeamId() != null) match.setHomeTeamId(updated.getHomeTeamId());
         if (updated.getAwayTeamId() != null) match.setAwayTeamId(updated.getAwayTeamId());
-        if (updated.getHomeGoals() != null) match.setHomeGoals(updated.getHomeGoals());
-        if (updated.getAwayGoals() != null) match.setAwayGoals(updated.getAwayGoals());
-        if (updated.getStatus() != null) match.setStatus(updated.getStatus());
         if (updated.getMatchTime() != null) match.setMatchTime(updated.getMatchTime());
         return match;
     }
@@ -92,6 +89,10 @@ public class MatchService {
 
     /** 录入比分并标记为已完赛 */
     public Match recordScore(Long matchId, int homeGoals, int awayGoals) {
+        if (matchId == null) throw new IllegalArgumentException("比赛ID不能为空");
+        if (homeGoals < 0 || homeGoals > 99 || awayGoals < 0 || awayGoals > 99) {
+            throw new IllegalArgumentException("比分必须在0到99之间");
+        }
         Match match = matches.get(matchId);
         if (match == null) throw new IllegalArgumentException("比赛不存在");
         match.setHomeGoals(homeGoals);

@@ -6,6 +6,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 球队控制器 - 球队 CRUD
@@ -26,16 +27,27 @@ public class TeamController {
             @RequestParam(required = false) String group,
             @RequestParam(required = false) Continent continent,
             @RequestParam(required = false) String keyword) {
+        List<Team> result = teamService.findAll();
+
+        // 支持多条件组合筛选
         if (keyword != null && !keyword.isBlank()) {
-            return ApiResponse.ok(teamService.search(keyword));
+            String kw = keyword.toLowerCase();
+            result = result.stream()
+                    .filter(t -> t.getName().toLowerCase().contains(kw) ||
+                                 t.getCode().toLowerCase().contains(kw))
+                    .collect(Collectors.toList());
         }
         if (group != null) {
-            return ApiResponse.ok(teamService.findByGroup(group));
+            result = result.stream()
+                    .filter(t -> group.equals(t.getGroupLetter()))
+                    .collect(Collectors.toList());
         }
         if (continent != null) {
-            return ApiResponse.ok(teamService.findByContinent(continent));
+            result = result.stream()
+                    .filter(t -> t.getContinent() == continent)
+                    .collect(Collectors.toList());
         }
-        return ApiResponse.ok(teamService.findAll());
+        return ApiResponse.ok(result);
     }
 
     @GetMapping("/{id}")

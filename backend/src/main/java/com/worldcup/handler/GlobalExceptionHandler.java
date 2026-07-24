@@ -1,15 +1,21 @@
 package com.worldcup.handler;
 
 import com.worldcup.model.ApiResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 /**
- * 全局异常处理器 - 统一捕获异常并返回友好错误信息
+ * Global exception handler.
  */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(IllegalArgumentException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -26,6 +32,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ApiResponse<?> handleGeneral(Exception e) {
-        return ApiResponse.error("服务器内部错误: " + e.getMessage());
+        log.error("Unhandled server error", e);
+        return ApiResponse.error("服务器内部错误，请稍后重试");
     }
 }
